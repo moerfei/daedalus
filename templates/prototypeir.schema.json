@@ -1,0 +1,158 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "proto-kit/prototypeir",
+  "title": "PrototypeIR — 生成侧中间表示（v0.1）",
+  "description": "设计方案→可交互Web原型的生成侧IR。样式只许引 designTokens 的 token 键（token:<group>.<name>），组件只许引 componentRegistry 白名单，交互动作收敛为 7 原语。",
+  "type": "object",
+  "required": ["meta", "designTokens", "componentRegistry", "flowGraph", "pages"],
+  "additionalProperties": false,
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["id", "name", "version"],
+      "additionalProperties": true,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+        "name": { "type": "string" },
+        "version": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "sourceRefs": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "designTokens": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "object",
+          "required": ["$type", "$value"],
+          "additionalProperties": false,
+          "properties": {
+            "$type": { "type": "string", "enum": ["color", "dimension", "fontFamily", "fontWeight", "typography", "shadow", "borderRadius"] },
+            "$value": { "type": "string" }
+          }
+        }
+      }
+    },
+    "componentRegistry": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "source", "interactiveComplexity"],
+        "additionalProperties": false,
+        "properties": {
+          "name": { "type": "string", "pattern": "^[A-Z][A-Za-z0-9]*$" },
+          "source": { "type": "string" },
+          "variants": { "type": "array", "items": { "type": "string" } },
+          "propsSchema": { "type": "object", "additionalProperties": true },
+          "interactiveComplexity": { "type": "string", "enum": ["static", "basic", "rich"] }
+        }
+      }
+    },
+    "constraints": { "type": "object", "additionalProperties": true },
+    "flowGraph": {
+      "type": "object",
+      "required": ["nodes", "edges"],
+      "additionalProperties": false,
+      "properties": {
+        "nodes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["page"],
+            "additionalProperties": false,
+            "properties": { "page": { "type": "string" }, "isEntry": { "type": "boolean" } }
+          }
+        },
+        "edges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["from", "to"],
+            "additionalProperties": false,
+            "properties": {
+              "from": { "type": "string" },
+              "to": { "type": "string" },
+              "trigger": { "type": "string" },
+              "guard": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "pages": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/page" } },
+    "dataContract": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["entity", "fields"],
+        "additionalProperties": false,
+        "properties": {
+          "entity": { "type": "string" },
+          "fields": { "type": "object", "additionalProperties": { "type": "string" } }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "page": {
+      "type": "object",
+      "required": ["id", "route", "title", "intent", "interactiveComplexity", "layoutTree"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^p-[a-z0-9-]+$" },
+        "route": { "type": "string", "pattern": "^/[a-zA-Z0-9/-]*$" },
+        "title": { "type": "string" },
+        "intent": { "type": "string", "minLength": 4 },
+        "usesShell": { "type": "string" },
+        "interactiveComplexity": { "type": "string", "enum": ["static", "basic", "rich"] },
+        "layoutTree": { "$ref": "#/$defs/node" },
+        "states": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name"],
+            "additionalProperties": true,
+            "properties": { "name": { "type": "string" } }
+          }
+        },
+        "interactions": { "type": "array", "items": { "$ref": "#/$defs/interaction" } }
+      }
+    },
+    "node": {
+      "type": "object",
+      "required": ["type"],
+      "additionalProperties": false,
+      "properties": {
+        "type": { "type": "string", "enum": ["section", "component", "text", "image", "list", "form", "input", "button"] },
+        "id": { "type": "string", "pattern": "^[a-zA-Z0-9_-]+$" },
+        "ref": { "type": "string" },
+        "text": { "type": "string" },
+        "intent": { "type": "string" },
+        "props": { "type": "object", "additionalProperties": true },
+        "style": {
+          "type": "object",
+          "additionalProperties": { "type": "string", "pattern": "^token:[a-zA-Z0-9._-]+$" }
+        },
+        "binding": { "type": "string" },
+        "children": { "type": "array", "items": { "$ref": "#/$defs/node" } }
+      }
+    },
+    "interaction": {
+      "type": "object",
+      "required": ["trigger", "action"],
+      "additionalProperties": false,
+      "properties": {
+        "trigger": { "type": "string", "pattern": "^(tap|submit)@[a-zA-Z0-9_-]+$" },
+        "action": {
+          "type": "string",
+          "enum": ["open-page", "open-modal", "close-modal", "switch-tab", "toggle-drawer", "submit", "set-state"]
+        },
+        "target": { "type": "string" },
+        "state": { "type": "string" }
+      }
+    }
+  }
+}

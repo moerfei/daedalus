@@ -1,0 +1,18 @@
+/*
+ * proto-kit 设计令牌占位（scaffold_react.mjs 将依据 IR designTokens 覆写本文件）。
+ * 命名契约：--<group>-<name>（与 A 轨单文件 HTML 一致）。
+ */
+:root {
+  --color-primary: #2563eb;
+  --color-bg: #f8fafc;
+  --color-surface: #ffffff;
+  --color-text: #0f172a;
+  --color-muted: #64748b;
+  --color-border: #e2e8f0;
+  --color-danger: #dc2626;
+  --color-success: #16a34a;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --typography-h1: 24px/1.2/700;
+  --typography-body: 14px/1.5/400;
+}

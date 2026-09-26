@@ -1,0 +1,9 @@
+{
+  "orders": [
+    { "id": "ORD-1001", "title": "企业版年度订阅", "amount": 1299, "status": "paid" },
+    { "id": "ORD-1002", "title": "高级支持包", "amount": 899, "status": "pending" },
+    { "id": "ORD-1003", "title": "团队培训服务", "amount": 450, "status": "paid" },
+    { "id": "ORD-1004", "title": "插件市场分成", "amount": 210, "status": "pending" }
+  ],
+  "user": { "name": "mojun", "role": "admin" }
+}

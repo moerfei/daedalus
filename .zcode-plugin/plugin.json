@@ -1,0 +1,17 @@
+{
+  "name": "proto-kit",
+  "displayName": "原型铸造",
+  "displayName_i18n": { "en": "Proto Kit", "zh-CN": "原型铸造" },
+  "version": "0.1.0",
+  "description": "设计方案→可交互Web原型生成流水线：双级IR（DesignSpec/PrototypeIR）、双轨发射（单文件HTML + React+Vite+Tailwind+shadcn工程）、G0-G3质量门禁与回炉闭环。v0.1 覆盖文字PRD通道。",
+  "description_i18n": {
+    "en": "Design-spec to interactive web prototype pipeline: two-level IR, dual-track emission (single-file HTML + React/Vite/Tailwind/shadcn), G0-G3 quality gates with rework loop. v0.1 covers the text-PRD channel.",
+    "zh-CN": "设计方案→可交互Web原型生成流水线：双级IR、双轨发射（单文件HTML + React+Vite+Tailwind+shadcn工程）、G0-G3质量门禁与回炉闭环。v0.1 覆盖文字PRD通道。"
+  },
+  "author": { "name": "mojun" },
+  "license": "MIT",
+  "keywords": ["prototype", "design-to-code", "ir", "pipeline", "原型", "原型生成"],
+  "skills": "skills",
+  "commands": "commands",
+  "agents": "agents"
+}

@@ -1,0 +1,161 @@
+{
+  "meta": {
+    "id": "sample-orders-app",
+    "name": "订单管理原型",
+    "version": "1",
+    "createdAt": "2026-09-26",
+    "sourceRefs": ["sample.prd.md"]
+  },
+  "designTokens": {
+    "color": {
+      "primary": { "$type": "color", "$value": "#2563eb" },
+      "bg": { "$type": "color", "$value": "#f8fafc" },
+      "surface": { "$type": "color", "$value": "#ffffff" },
+      "text": { "$type": "color", "$value": "#0f172a" },
+      "muted": { "$type": "color", "$value": "#64748b" },
+      "border": { "$type": "color", "$value": "#e2e8f0" },
+      "danger": { "$type": "color", "$value": "#dc2626" },
+      "success": { "$type": "color", "$value": "#16a34a" }
+    },
+    "radius": {
+      "md": { "$type": "borderRadius", "$value": "8px" },
+      "lg": { "$type": "borderRadius", "$value": "12px" }
+    },
+    "typography": {
+      "h1": { "$type": "typography", "$value": "24px/1.2/700" },
+      "body": { "$type": "typography", "$value": "14px/1.5/400" }
+    }
+  },
+  "componentRegistry": [
+    { "name": "Button", "source": "shadcn", "interactiveComplexity": "basic", "variants": ["primary", "ghost", "danger"], "propsSchema": { "variant": "string", "text": "string" } },
+    { "name": "Input", "source": "shadcn", "interactiveComplexity": "basic", "propsSchema": { "type": "string", "placeholder": "string", "required": "boolean" } },
+    { "name": "Card", "source": "shadcn", "interactiveComplexity": "static" },
+    { "name": "Tabs", "source": "shadcn", "interactiveComplexity": "basic" },
+    { "name": "Dialog", "source": "shadcn", "interactiveComplexity": "basic", "propsSchema": { "title": "string" } },
+    { "name": "Badge", "source": "shadcn", "interactiveComplexity": "static" },
+    { "name": "NavBar", "source": "custom", "interactiveComplexity": "basic" }
+  ],
+  "constraints": { "maxPageLevels": 3, "navigationStyle": "top-bar" },
+  "flowGraph": {
+    "nodes": [
+      { "page": "p-login", "isEntry": true },
+      { "page": "p-orders" }
+    ],
+    "edges": [
+      { "from": "p-login", "to": "p-orders", "trigger": "tap@login-btn", "guard": "表单校验通过" },
+      { "from": "p-orders", "to": "p-login", "trigger": "tap@logout-btn" }
+    ]
+  },
+  "pages": [
+    {
+      "id": "p-login",
+      "route": "/login",
+      "title": "登录",
+      "intent": "用户输入账号密码，校验通过后进入订单列表",
+      "usesShell": "none",
+      "interactiveComplexity": "basic",
+      "layoutTree": {
+        "type": "section",
+        "id": "login-card",
+        "ref": "Card",
+        "intent": "登录卡片",
+        "style": { "background": "token:color.surface" },
+        "children": [
+          { "type": "text", "id": "login-title", "text": "订单管理系统", "style": { "font": "token:typography.h1", "color": "token:color.text" } },
+          {
+            "type": "form",
+            "id": "login-form",
+            "intent": "登录表单",
+            "children": [
+              { "type": "input", "id": "login-user", "ref": "Input", "props": { "type": "text", "placeholder": "用户名", "required": true } },
+              { "type": "input", "id": "login-pass", "ref": "Input", "props": { "type": "password", "placeholder": "密码", "required": true } },
+              { "type": "button", "id": "login-btn", "ref": "Button", "props": { "variant": "primary", "text": "登录" } }
+            ]
+          }
+        ]
+      },
+      "interactions": [
+        { "trigger": "submit@login-form", "action": "submit" },
+        { "trigger": "tap@login-btn", "action": "set-state", "state": "auth.logged-in=true" },
+        { "trigger": "tap@login-btn", "action": "open-page", "target": "p-orders" }
+      ]
+    },
+    {
+      "id": "p-orders",
+      "route": "/orders",
+      "title": "订单列表",
+      "intent": "浏览并按状态筛选订单，查看订单详情",
+      "usesShell": "default",
+      "interactiveComplexity": "basic",
+      "layoutTree": {
+        "type": "section",
+        "id": "orders-root",
+        "children": [
+          {
+            "type": "component",
+            "id": "orders-nav",
+            "ref": "NavBar",
+            "props": { "title": "订单管理", "user": "mojun" },
+            "children": [
+              { "type": "button", "id": "logout-btn", "ref": "Button", "props": { "variant": "ghost", "text": "退出" } }
+            ]
+          },
+          {
+            "type": "component",
+            "id": "tabs-orders",
+            "ref": "Tabs",
+            "intent": "状态筛选",
+            "children": [
+              {
+                "type": "section",
+                "id": "tab-panel-all",
+                "props": { "tab": "all", "label": "全部" },
+                "children": [
+                  { "type": "list", "id": "orders-list-all", "binding": "orders", "props": { "filter": "status=all" } }
+                ]
+              },
+              {
+                "type": "section",
+                "id": "tab-panel-paid",
+                "props": { "tab": "paid", "label": "已支付" },
+                "children": [
+                  { "type": "list", "id": "orders-list-paid", "binding": "orders", "props": { "filter": "status=paid" } }
+                ]
+              },
+              {
+                "type": "section",
+                "id": "tab-panel-pending",
+                "props": { "tab": "pending", "label": "待支付" },
+                "children": [
+                  { "type": "list", "id": "orders-list-pending", "binding": "orders", "props": { "filter": "status=pending" } }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "component",
+            "id": "modal-order-detail",
+            "ref": "Dialog",
+            "props": { "title": "订单详情" },
+            "children": [
+              { "type": "text", "id": "order-detail-body", "text": "订单详情内容占位" }
+            ]
+          }
+        ]
+      },
+      "interactions": [
+        { "trigger": "tap@tab-all", "action": "switch-tab", "target": "tabs-orders" },
+        { "trigger": "tap@tab-paid", "action": "switch-tab", "target": "tabs-orders" },
+        { "trigger": "tap@tab-pending", "action": "switch-tab", "target": "tabs-orders" },
+        { "trigger": "tap@orders-list-all-row-1", "action": "open-modal", "target": "#modal-order-detail" },
+        { "trigger": "tap@modal-order-detail-close", "action": "close-modal", "target": "#modal-order-detail" },
+        { "trigger": "tap@logout-btn", "action": "set-state", "state": "auth.logged-in=false" },
+        { "trigger": "tap@logout-btn", "action": "open-page", "target": "p-login" }
+      ]
+    }
+  ],
+  "dataContract": [
+    { "entity": "Order", "fields": { "id": "string", "title": "string", "amount": "number", "status": "string" } },
+    { "entity": "User", "fields": { "name": "string", "role": "string" } }
+  ]
+}

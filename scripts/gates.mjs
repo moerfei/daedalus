@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
- * proto-kit gates.mjs — G0/G2/G3 质量门禁（Playwright/Chromium）
+ * daedalus gates.mjs — G0/G2/G3 质量门禁（Playwright/Chromium）
  *
  * CLI:
  *   node gates.mjs --ir <ir.json> (--serve <dir|file.html> [--port 8787] | --url <http://...>) [--out <reportDir>]
@@ -60,7 +60,7 @@ function toPosix(p) {
 // ---------- playwright 解析（mission 契约顺序） ----------
 
 const PW_LOCAL_DIR = () =>
-  path.join(os.homedir(), '.zcode', 'cli', 'plugins', 'data', 'proto-kit@local-plugins', 'node_modules', 'playwright')
+  path.join(os.homedir(), '.zcode', 'cli', 'plugins', 'data', 'daedalus@local-plugins', 'node_modules', 'playwright')
 
 async function loadPlaywright() {
   // 1) 常规 import('playwright')
@@ -69,7 +69,7 @@ async function loadPlaywright() {
     const pw = m.default && m.default.chromium ? m.default : m
     if (pw && pw.chromium) return { pw, path: 'playwright' }
   } catch { /* 落到下一级 */ }
-  // 2) proto-kit 本地数据目录安装位
+  // 2) daedalus 本地数据目录安装位
   const dir = PW_LOCAL_DIR()
   if (fs.existsSync(path.join(dir, 'package.json'))) {
     try {
@@ -84,7 +84,7 @@ async function loadPlaywright() {
 function playwrightMissingHint() {
   return [
     '未找到 playwright。两种修复方式：',
-    '  1) node env_doctor.mjs --fix   （proto-kit 官方路径，安装到 ' + PW_LOCAL_DIR() + '）',
+    '  1) node env_doctor.mjs --fix   （daedalus 官方路径，安装到 ' + PW_LOCAL_DIR() + '）',
     '  2) 在任意上级目录 npm i playwright 并执行 npx playwright install chromium',
     '网络不畅时可设镜像: PLAYWRIGHT_DOWNLOAD_HOST=https://npmmirror.com/mirrors/playwright/',
   ]
@@ -456,7 +456,7 @@ async function main() {
 
   const report = {
     ok,
-    tool: 'proto-kit gates',
+    tool: 'daedalus gates',
     target: targetLabel,
     baseUrl,
     playwrightPath: loaded.path,

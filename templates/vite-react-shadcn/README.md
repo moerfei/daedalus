@@ -1,6 +1,6 @@
-# proto-kit B 轨模板（vite-react-shadcn）
+# daedalus B 轨模板（vite-react-shadcn）
 
-proto-kit 双轨发射的 B 轨工程模板：React 18 + Vite 5 + TypeScript 5 + Tailwind CSS 3.4 + 自研 shadcn 风格组件（无 radix）。MSW@2 提供 mock 数据层。
+daedalus 双轨发射的 B 轨工程模板：React 18 + Vite 5 + TypeScript 5 + Tailwind CSS 3.4 + 自研 shadcn 风格组件（无 radix）。MSW@2 提供 mock 数据层。
 
 本目录是 **scaffold_react.mjs 的拷贝源**，不是直接开发的工程。脚手架会：
 

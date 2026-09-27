@@ -2,7 +2,7 @@ import type { HTMLAttributes } from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '../../lib/utils'
 
-// proto-kit 自研 Badge（shadcn 风格，无 radix）
+// daedalus 自研 Badge（shadcn 风格，无 radix）
 const badgeVariants = cva(
   'inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-medium transition-colors',
   {

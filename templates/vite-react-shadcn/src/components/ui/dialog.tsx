@@ -1,7 +1,7 @@
 import { useEffect, type HTMLAttributes, type ReactNode } from 'react'
 import { cn } from '../../lib/utils'
 
-// proto-kit 自研 Dialog（shadcn 风格，无 radix）。
+// daedalus 自研 Dialog（shadcn 风格，无 radix）。
 // 关闭按钮 id 契约：<dialogId>-close（与 A 轨自动生成的关闭按钮一致）。
 
 interface DialogProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {

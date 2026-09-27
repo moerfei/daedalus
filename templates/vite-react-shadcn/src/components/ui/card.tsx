@@ -1,7 +1,7 @@
 import type { HTMLAttributes } from 'react'
 import { cn } from '../../lib/utils'
 
-// proto-kit 自研 Card（shadcn 风格，无 radix）：白卡 + 浅背景 + 圆角，与 A 轨 pk-card 观感对齐
+// daedalus 自研 Card（shadcn 风格，无 radix）：白卡 + 浅背景 + 圆角，与 A 轨 pk-card 观感对齐
 
 export function Card({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
   return (

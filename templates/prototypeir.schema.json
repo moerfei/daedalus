@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "proto-kit/prototypeir",
+  "$id": "daedalus/prototypeir",
   "title": "PrototypeIR — 生成侧中间表示（v0.1）",
   "description": "设计方案→可交互Web原型的生成侧IR。样式只许引 designTokens 的 token 键（token:<group>.<name>），组件只许引 componentRegistry 白名单，交互动作收敛为 7 原语。",
   "type": "object",

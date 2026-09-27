@@ -1,12 +1,12 @@
 ---
 name: proto-gen
-description: "原型铸造主剧本：把文字 PRD 经 DesignSpec→PrototypeIR 双级 IR 编排成双轨可交互原型（A 单文件 HTML / B React+Vite+Tailwind+shadcn），以 G0–G3 门禁与回炉闭环收口。派 planner/pagegen/judge 子代理分工，主会话负责结构化、合并、校验、发射与门禁调度。Triggers on /proto、生成原型、PRD 转原型、原型流水线、prototype generation、design-to-code."
+description: "代达罗斯主剧本：把文字 PRD 经 DesignSpec→PrototypeIR 双级 IR 编排成双轨可交互原型（A 单文件 HTML / B React+Vite+Tailwind+shadcn），以 G0–G3 门禁与回炉闭环收口。派 planner/pagegen/judge 子代理分工，主会话负责结构化、合并、校验、发射与门禁调度。Triggers on /proto、生成原型、PRD 转原型、原型流水线、prototype generation、design-to-code."
 when_to_use: "用户给出文字 PRD（文件路径或粘贴正文）并要求生成可交互 Web 原型，或需要端到端跑 S0–S6 流水线（含双轨发射与门禁）时使用。只改已有原型的局部时改用 proto-iterate；只查环境时改用 env-setup。"
 ---
 
 # proto-gen — 文字 PRD → 双轨可交互原型（S0–S6 编排剧本）
 
-你是流水线编排者（主会话本身）。本剧本把一份文字 PRD 铸成双轨可交互原型：A 轨单文件 HTML（零依赖、双击即开）、B 轨 React+Vite+Tailwind+shadcn 工程，并以 G0–G3 门禁与回炉闭环收口。重活派给子代理（`proto-kit:planner` / `proto-kit:pagegen` / `proto-kit:judge`），你负责结构化、合并、校验、发射与门禁调度——**你不逐页手写布局**。
+你是流水线编排者（主会话本身）。本剧本把一份文字 PRD 铸成双轨可交互原型：A 轨单文件 HTML（零依赖、双击即开）、B 轨 React+Vite+Tailwind+shadcn 工程，并以 G0–G3 门禁与回炉闭环收口。重活派给子代理（`daedalus:planner` / `daedalus:pagegen` / `daedalus:judge`），你负责结构化、合并、校验、发射与门禁调度——**你不逐页手写布局**。
 
 规范细节不背在身上，按需查阅本技能 `references/`：
 - `references/ir-spec.md` — 两级 IR 字段权威说明 + 黄金样例解读
@@ -15,7 +15,7 @@ when_to_use: "用户给出文字 PRD（文件路径或粘贴正文）并要求�
 
 ## 0. 插件根解析
 
-定位插件根（取第一个存在者）：①`C:\Users\mojun\.zcode\cli\plugins\cache\local-plugins\proto-kit\<version>\`（安装缓存，version 取目录实际值）②`C:\Users\mojun\plugins\proto-kit\`（源目录）。下文 `<ROOT>` 即该路径。
+定位插件根（取第一个存在者）：①`C:\Users\mojun\.zcode\cli\plugins\cache\local-plugins\daedalus\<version>\`（安装缓存，version 取目录实际值）②`C:\Users\mojun\plugins\daedalus\`（源目录）。下文 `<ROOT>` 即该路径。
 
 ## 1. 产物目录约定
 
@@ -48,7 +48,7 @@ node <ROOT>/scripts/validate_ir.mjs designspec.json --kind designspec
 
 ## 3. S1+S2 — DesignSpec → PrototypeIR 骨架（派 planner）
 
-派 `proto-kit:planner` 一只，**自包含 prompt** 必须含：PRD 全文 + DesignSpec 全文 + 两份 schema 路径（`<ROOT>/templates/designspec.schema.json`、`<ROOT>/templates/prototypeir.schema.json`）+ 输出路径 `ir/prototypeir.json`。代理看不到你的会话，缺一项它就写不对。
+派 `daedalus:planner` 一只，**自包含 prompt** 必须含：PRD 全文 + DesignSpec 全文 + 两份 schema 路径（`<ROOT>/templates/designspec.schema.json`、`<ROOT>/templates/prototypeir.schema.json`）+ 输出路径 `ir/prototypeir.json`。代理看不到你的会话，缺一项它就写不对。
 
 预期产物：`ir/prototypeir.json` 骨架——meta / designTokens / componentRegistry / constraints / flowGraph / dataContract 齐全，`pages[]` 每页给 id / route / title / intent / usesShell / interactiveComplexity，layoutTree 只留最小占位（如 `{"type":"section","id":"<pageId>-root"}`，由 S3 填充）。
 
@@ -60,7 +60,7 @@ node <ROOT>/scripts/validate_ir.mjs ir/prototypeir.json
 
 ## 4. S3 — 逐页 PageSpec（并行派 pagegen）
 
-1. 从 `ir/prototypeir.json` 取每页骨架，**每页派一只 `proto-kit:pagegen`，在同一条消息里并行发起全部调用**。
+1. 从 `ir/prototypeir.json` 取每页骨架，**每页派一只 `daedalus:pagegen`，在同一条消息里并行发起全部调用**。
 2. 每份 prompt 必须自包含：
    - **全局物只读注入**（直接贴 JSON 全文，不许让代理自己去读 prototypeir.json）：designTokens、componentRegistry、flowGraph、该页骨架（id/route/title/intent/usesShell/interactiveComplexity）
    - **黄金样例路径**作 one-shot 范例：`<ROOT>/templates/examples/sample.prototypeir.json`
@@ -95,7 +95,7 @@ node <ROOT>/scripts/scaffold_react.mjs ir/prototypeir.json -o b-track --no-insta
 
 `--no-install` 是刻意的：npm install 耗时且可能失败，**留给收网阶段或用户**。需要跑 B 轨门禁（S6）或让用户本地 `npm run dev` 前，在 `b-track/` 内执行 `npm install --no-audit --no-fund` 一次即可。
 
-scaffold 产出的是页 stub（`src/routes/<pageId>/index.tsx` 带 `// PAGEGEN-TODO`）。随后**每页再派一只 `proto-kit:pagegen`**（同样并行派发），prompt 自包含：
+scaffold 产出的是页 stub（`src/routes/<pageId>/index.tsx` 带 `// PAGEGEN-TODO`）。随后**每页再派一只 `daedalus:pagegen`**（同样并行派发），prompt 自包含：
 - 该页 PageSpec 全文（`ir/pages/<pageId>.json` 的内容）
 - 可用 ui 组件清单：`src/components/ui/` 下的 button/input/card/tabs/dialog/badge（shadcn 风格自研，props 用法见组件文件，让代理自行 Read `b-track/src/components/ui/`）
 - one-shot tsx 范例（模式声明：本次产 TSX）
@@ -118,7 +118,7 @@ node <ROOT>/scripts/gates.mjs --ir ir/prototypeir.json --url http://127.0.0.1:51
 ```
 
 4. **硬门禁**（G0 运行时零错 + G3 交互逐条 + 死链扫描）失败 → 把失败 check 的 name/pass/detail **原文回注**给责任方重生成：IR 层问题回 planner / 对应页 pagegen，发射层疑点先查 `references/emission-spec.md` 的 ID 规则表。**总回炉轮上限 3**（含 A/B 两轨全部重试），超限停止并把剩余失败项写进 openIssues。
-5. **G2 视觉**：硬门禁过后派 `proto-kit:judge` 读 `gates-report/screenshots/` 打分（appearance 1-5 + 问题清单，口径见 `references/gates-spec.md`）。appearance **<4 分回注**对应页 pagegen 重生成（计入总回炉轮次）；content / interaction-ready 的问题进 issues 清单，主会话裁量是否随下一轮回炉一并处理。
+5. **G2 视觉**：硬门禁过后派 `daedalus:judge` 读 `gates-report/screenshots/` 打分（appearance 1-5 + 问题清单，口径见 `references/gates-spec.md`）。appearance **<4 分回注**对应页 pagegen 重生成（计入总回炉轮次）；content / interaction-ready 的问题进 issues 清单，主会话裁量是否随下一轮回炉一并处理。
 6. 每轮回炉后重跑对应轨的 gates，直到通过或触顶。
 
 ## 8. 预览与交付

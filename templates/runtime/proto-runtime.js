@@ -1,4 +1,4 @@
-/*! proto-kit A 轨运行时 v0.1 — 零依赖：hash 路由 + 7 交互原语(open-page/open-modal/close-modal/switch-tab/toggle-drawer/submit/set-state) + toast + sessionStorage 状态 + data-proto-if 显隐 */
+/*! daedalus A 轨运行时 v0.1 — 零依赖：hash 路由 + 7 交互原语(open-page/open-modal/close-modal/switch-tab/toggle-drawer/submit/set-state) + toast + sessionStorage 状态 + data-proto-if 显隐 */
 (function () {
   'use strict';
   var SK = 'proto-state';

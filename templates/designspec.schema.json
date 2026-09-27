@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "proto-kit/designspec",
+  "$id": "daedalus/designspec",
   "title": "DesignSpec — 输入侧中间表示（v0.1 文字PRD通道）",
   "description": "S0 的产物：把文字PRD结构化为页面清单/交互清单/数据实体/风格提示。S1 规划器据此产出 PrototypeIR。",
   "type": "object",

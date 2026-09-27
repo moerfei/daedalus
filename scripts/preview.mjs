@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
- * proto-kit preview.mjs — 静态预览服务器
+ * daedalus preview.mjs — 静态预览服务器
  *
  * CLI:
  *   node preview.mjs <dir|file.html> [--port 5179] [--open]
@@ -126,7 +126,7 @@ function main() {
     process.stdout.write(
       JSON.stringify({ ok: true, url, root: rootDir, entry: entryFile || 'index.html' }) + '\n',
     )
-    console.error(`proto-kit preview: ${url}  （root: ${rootDir}${entryFile ? '，/ → ' + entryFile : ''}，Ctrl-C 退出）`)
+    console.error(`daedalus preview: ${url}  （root: ${rootDir}${entryFile ? '，/ → ' + entryFile : ''}，Ctrl-C 退出）`)
     if (args.open) openBrowser(url)
   })
 

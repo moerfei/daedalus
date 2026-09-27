@@ -1,6 +1,8 @@
-# proto-kit（原型铸造）
+# daedalus（代达罗斯）
 
-设计方案 → 可交互 Web 原型生成流水线，ZCode 本地插件。v0.1 覆盖**文字 PRD 通道**：PRD → 双级 IR（DesignSpec / PrototypeIR）→ 双轨发射（A 单文件 HTML / B React+Vite+Tailwind+shadcn 工程）→ G0–G3 质量门禁 → 回炉闭环。
+> 名字取自希腊神话的大工匠代达罗斯——为克里特岛造出迷宫、为儿子造出翅膀，把图纸变成实物的人。本插件做的事一样：让设计方案在流水线里长成可交互的原型。
+
+设计方案 → 可交互 Web 原型生成流水线，ZCode 本地插件。v0.1 覆盖**文字 PRD 通道**：PRD → 双级 IR（DesignSpec / PrototypeIR）→ 双轨发射（A 单文件 HTML / B React+Vite+Tailwind+shadcn 工程）→ G0–G3 质量门禁 → 回炉闭环。图标即其意象：方形螺旋迷宫之上，三片金色羽翼破阵而出（`assets/draw_icon.py` 可重绘）。
 
 ## 架构（文字版五层）
 
@@ -23,14 +25,14 @@
 
 ## 安装与重载（缓存拷贝制，重要）
 
-本插件走本地 marketplace（local-plugins）。**ZCode 运行时读的是安装缓存，不是源目录**——改了 `C:\Users\mojun\plugins\proto-kit\` 源码后，必须重新安装/重载才生效：
+本插件走本地 marketplace（local-plugins）。**ZCode 运行时读的是安装缓存，不是源目录**——改了 `C:\Users\mojun\plugins\daedalus\` 源码后，必须重新安装/重载才生效：
 
-1. 源目录（唯一真源）：`C:\Users\mojun\plugins\proto-kit\`
-2. 安装缓存（运行时实际读取）：`C:\Users\mojun\.zcode\cli\plugins\cache\local-plugins\proto-kit\<version>\`
+1. 源目录（唯一真源）：`C:\Users\mojun\plugins\daedalus\`
+2. 安装缓存（运行时实际读取）：`C:\Users\mojun\.zcode\cli\plugins\cache\local-plugins\daedalus\<version>\`
 3. 改源后的生效操作：在 ZCode 中对该插件执行重装/更新（或卸载后从 local-plugins 重新安装；改了 `plugin.json` 的 version 则以新版本号安装）。
 4. 验证缓存已更新：对比缓存目录与源目录中同名文件（如 `skills/proto-gen/SKILL.md`）的内容或修改时间。
 
-技能与代理内部统一按「插件根解析规则」定位 `<ROOT>`：取第一个存在者——①安装缓存 `...cache\local-plugins\proto-kit\<version>\`（version 取目录实际值）②源目录 `C:\Users\mojun\plugins\proto-kit\`。
+技能与代理内部统一按「插件根解析规则」定位 `<ROOT>`：取第一个存在者——①安装缓存 `...cache\local-plugins\daedalus\<version>\`（version 取目录实际值）②源目录 `C:\Users\mojun\plugins\daedalus\`。
 
 ## 用法
 
@@ -86,7 +88,7 @@ proto-out/
 ## 依赖要求
 
 - **Node ≥ 20**、npm 可用（B 轨安装与 env_doctor --fix 需要）
-- **playwright**：仅 G 门禁需要。解析顺序 `import('playwright')` → `~/.zcode/cli/plugins/data/proto-kit@local-plugins/node_modules/playwright` → 指引安装（exit 2）。装在插件数据目录是为了不污染用户工程且多项目共享 chromium。不跑门禁时缺失无碍。
+- **playwright**：仅 G 门禁需要。解析顺序 `import('playwright')` → `~/.zcode/cli/plugins/data/daedalus@local-plugins/node_modules/playwright` → 指引安装（exit 2）。装在插件数据目录是为了不污染用户工程且多项目共享 chromium。不跑门禁时缺失无碍。
 
 ## v0.1 边界与路线
 

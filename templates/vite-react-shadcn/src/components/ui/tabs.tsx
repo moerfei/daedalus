@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, type HTMLAttributes, type ReactNode } from 'react'
 import { cn } from '../../lib/utils'
 
-// proto-kit 自研 Tabs（shadcn 风格，无 radix）。
+// daedalus 自研 Tabs（shadcn 风格，无 radix）。
 // 交互契约与 A 轨一致：触发器 id 形如 tab-<名>，激活态 aria-selected="true"。
 
 interface TabsContextValue {

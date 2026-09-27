@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
- * proto-kit scaffold_react.mjs — B 轨脚手架：PrototypeIR → React 工程
+ * daedalus scaffold_react.mjs — B 轨脚手架：PrototypeIR → React 工程
  *
  * CLI:
  *   node scaffold_react.mjs <ir.json> -o <outDir> [--template <dir>] [--no-install] [-m <fixtures.json>]
@@ -166,7 +166,7 @@ function resolveFixtures(ir, args, irPath, errors) {
 function genTokensCss(ir) {
   const lines = []
   lines.push('/*')
-  lines.push(' * proto-kit 设计令牌 — 由 scaffold_react.mjs 依据 IR designTokens 生成')
+  lines.push(' * daedalus 设计令牌 — 由 scaffold_react.mjs 依据 IR designTokens 生成')
   lines.push(` * meta.id=${ir.meta?.id ?? 'unknown'} version=${ir.meta?.version ?? '?'}（勿手改，重跑脚手架会覆写）`)
   lines.push(' * 命名契约：--<group>-<name>（与 A 轨单文件 HTML 一致）')
   lines.push(' */')
@@ -188,7 +188,7 @@ import { createRoot } from 'react-dom/client'
 import App from './App'
 import './index.css'
 
-// proto-kit 入口（scaffold_react.mjs 生成）：DEV 模式启用 MSW mock，HashRouter 见 App.tsx
+// daedalus 入口（scaffold_react.mjs 生成）：DEV 模式启用 MSW mock，HashRouter 见 App.tsx
 async function bootstrap() {
   if (import.meta.env.DEV) {
     const { worker } = await import('./mocks/browser')
@@ -227,7 +227,7 @@ function genAppTsx(ir, entryPageId, shellUsed) {
   if (inShell) routeLines.push(`        </Route>`)
 
   return `/*
- * proto-kit App — 由 scaffold_react.mjs 生成
+ * daedalus App — 由 scaffold_react.mjs 生成
  * meta.id=${ir.meta?.id ?? 'unknown'} version=${ir.meta?.version ?? '?'}
  * 路由：HashRouter，工程内路径 /<pageId>；入口页 ${entryPageId}（flowGraph.isEntry）。
  * hash 直达形如 #${entryPageId}（HashRouter 会归一化为 /${entryPageId}，与 A 轨 hash 契约一致）。
@@ -253,7 +253,7 @@ function genPageStub(p, shellUsed) {
     : '<main className="flex min-h-dvh flex-col items-center justify-center gap-3 bg-bg px-6 text-foreground">'
   const closer = wantsShell ? '</main>' : '</main>'
   return `/*
- * proto-kit page stub — scaffold_react.mjs 生成
+ * daedalus page stub — scaffold_react.mjs 生成
  * pageId: ${p.id}
  * route: ${p.route ?? '/'}（IR route 字段；工程内实际路径 /${p.id}）
  * title: ${escapeComment(p.title ?? p.id)}
@@ -277,7 +277,7 @@ function genNavBarTsx(ir, entryPageId) {
   const title = typeof navProps.title === 'string' && navProps.title ? navProps.title : ir.meta?.name || 'Proto App'
   const user = typeof navProps.user === 'string' && navProps.user ? navProps.user : 'user'
   return `/*
- * proto-kit shell NavBar — scaffold_react.mjs 生成
+ * daedalus shell NavBar — scaffold_react.mjs 生成
  * 用途：usesShell=default 的页面共用顶栏；退出按钮 id=logout-btn（交互契约与 A 轨一致）。
  */
 import { useNavigate } from 'react-router-dom'
@@ -315,7 +315,7 @@ function genShellLayoutTsx(ir) {
   const title = typeof navProps.title === 'string' && navProps.title ? navProps.title : ir.meta?.name || 'Proto App'
   const user = typeof navProps.user === 'string' && navProps.user ? navProps.user : 'user'
   return `/*
- * proto-kit shell 布局 — scaffold_react.mjs 生成
+ * daedalus shell 布局 — scaffold_react.mjs 生成
  * usesShell=default 的页面嵌套在此布局：顶栏 NavBar + <Outlet /> 内容容器。
  */
 import { Outlet } from 'react-router-dom'
@@ -337,7 +337,7 @@ export default function ShellLayout() {
 function genHandlersTsx(ir, fixtures) {
   const lines = []
   lines.push('/*')
-  lines.push(' * proto-kit MSW handlers — scaffold_react.mjs 生成（dataContract + fixtures）')
+  lines.push(' * daedalus MSW handlers — scaffold_react.mjs 生成（dataContract + fixtures）')
   lines.push(` * meta.id=${ir.meta?.id ?? 'unknown'} version=${ir.meta?.version ?? '?'}（勿手改，重跑脚手架会覆写）`)
   lines.push(' */')
   lines.push("import { http, HttpResponse } from 'msw'")
@@ -367,7 +367,7 @@ function genBrowserTsx() {
   return `import { setupWorker } from 'msw/browser'
 import { handlers } from './handlers'
 
-// proto-kit MSW browser worker — scaffold_react.mjs 生成
+// daedalus MSW browser worker — scaffold_react.mjs 生成
 export const worker = setupWorker(...handlers)
 `
 }

@@ -1,7 +1,7 @@
 import { forwardRef, type InputHTMLAttributes } from 'react'
 import { cn } from '../../lib/utils'
 
-// proto-kit 自研 Input（shadcn 风格，无 radix）
+// daedalus 自研 Input（shadcn 风格，无 radix）
 export type InputProps = InputHTMLAttributes<HTMLInputElement>
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(({ className, type = 'text', ...props }, ref) => (

@@ -10,7 +10,7 @@ when_to_use: "proto-out/ 下已有可运行原型（跑过 /proto），用户提
 
 ## 0. 插件根解析
 
-定位插件根（取第一个存在者）：①`C:\Users\mojun\.zcode\cli\plugins\cache\local-plugins\proto-kit\<version>\`（安装缓存，version 取目录实际值）②`C:\Users\mojun\plugins\proto-kit\`（源目录）。下文 `<ROOT>` 即该路径。
+定位插件根（取第一个存在者）：①`C:\Users\mojun\.zcode\cli\plugins\cache\local-plugins\daedalus\<version>\`（安装缓存，version 取目录实际值）②`C:\Users\mojun\plugins\daedalus\`（源目录）。下文 `<ROOT>` 即该路径。
 
 命令均在 `<cwd>/proto-out/` 内执行。产物目录不存在时，说明尚未生成原型，引导用户先走 `/proto`。
 
@@ -19,12 +19,12 @@ when_to_use: "proto-out/ 下已有可运行原型（跑过 /proto），用户提
 1. 读用户修改指令。没说清改哪里就先问，不要猜。
 2. 定位受影响页：
    - **静态分析**：对照指令逐条 diff `designspec.json` 的 pages/interactions/dataEntities 与 `ir/prototypeir.json`——指令动到的页面、以及 flowGraph 上因 target/trigger 变化被牵连的页面（如改了路由或页间跳转）。
-   - **视觉辅助（必要时）**：指令描述的是观感问题时（"这页太挤"），派 `proto-kit:judge` 读 `gates-report/screenshots/` 现状截图比对确认。
+   - **视觉辅助（必要时）**：指令描述的是观感问题时（"这页太挤"），派 `daedalus:judge` 读 `gates-report/screenshots/` 现状截图比对确认。
 3. 产出一份**影响清单**：受影响页 id + 每页要改什么 + 是否动 tokens/registry/flowGraph/dataContract 全局物。**全局物受动时所有引用方都算受影响页**（如改 color.primary 令全部页面重发射），此时如实告知用户波及面较大。
 
 ## 2. 只重生成受影响物
 
-- **PageSpec**：每个受影响页派一只 `proto-kit:pagegen`（JSON 模式），prompt 与 proto-gen S3 同构——全局物只读注入（designTokens/componentRegistry/flowGraph/该页现状骨架）+ 黄金样例路径 `<ROOT>/templates/examples/sample.prototypeir.json` + 修改指令原文 + 输出路径 `ir/pages/<pageId>.json`。**未受影响页的 pages/<pageId>.json 一字不动。**
+- **PageSpec**：每个受影响页派一只 `daedalus:pagegen`（JSON 模式），prompt 与 proto-gen S3 同构——全局物只读注入（designTokens/componentRegistry/flowGraph/该页现状骨架）+ 黄金样例路径 `<ROOT>/templates/examples/sample.prototypeir.json` + 修改指令原文 + 输出路径 `ir/pages/<pageId>.json`。**未受影响页的 pages/<pageId>.json 一字不动。**
 - **B 轨 tsx**：受影响页再派一只 pagegen（TSX 模式）重写 `b-track/src/routes/<pageId>/index.tsx`（prompt 含该页新 PageSpec + ui 组件清单 + 测试锚点约束，同 proto-gen S5）。
 - **全局物**：指令确实要改 tokens/registry/flowGraph/dataContract 时，主会话直接改 `ir/prototypeir.json` 对应字段（改动最小化），必要时同步 `designspec.json` 保持两级 IR 一致。
 - **fixtures**：指令涉及数据字段/实体时同步改 `fixtures.json`。

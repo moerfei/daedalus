@@ -1,7 +1,7 @@
 {
-  "name": "proto-kit",
-  "displayName": "原型铸造",
-  "displayName_i18n": { "en": "Proto Kit", "zh-CN": "原型铸造" },
+  "name": "daedalus",
+  "displayName": "代达罗斯",
+  "displayName_i18n": { "en": "Daedalus", "zh-CN": "代达罗斯" },
   "version": "0.1.0",
   "description": "设计方案→可交互Web原型生成流水线：双级IR（DesignSpec/PrototypeIR）、双轨发射（单文件HTML + React+Vite+Tailwind+shadcn工程）、G0-G3质量门禁与回炉闭环。v0.1 覆盖文字PRD通道。",
   "description_i18n": {
@@ -10,7 +10,7 @@
   },
   "author": { "name": "mojun" },
   "license": "MIT",
-  "keywords": ["prototype", "design-to-code", "ir", "pipeline", "原型", "原型生成"],
+  "keywords": ["daedalus", "labyrinth", "prototype", "design-to-code", "ir", "pipeline", "原型", "代达罗斯"],
   "skills": "skills",
   "commands": "commands",
   "agents": "agents"

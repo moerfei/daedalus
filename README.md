@@ -2,13 +2,13 @@
 
 > 名字取自希腊神话的大工匠代达罗斯——为克里特岛造出迷宫、为儿子造出翅膀，把图纸变成实物的人。本插件做的事一样：让设计方案在流水线里长成可交互的原型。
 
-设计方案 → 可交互 Web 原型生成流水线，ZCode 本地插件。v0.1 覆盖**文字 PRD 通道**：PRD → 双级 IR（DesignSpec / PrototypeIR）→ 双轨发射（A 单文件 HTML / B React+Vite+Tailwind+shadcn 工程）→ G0–G3 质量门禁 → 回炉闭环。图标即其意象：方形螺旋迷宫之上，三片金色羽翼破阵而出（`assets/draw_icon.py` 可重绘）。
+设计方案 → 可交互 Web 原型生成流水线，ZCode 本地插件。v0.2 从**一句想法**起步：`/prd` 引导式创建规范 PRD → 双级 IR（DesignSpec / PrototypeIR）→ 双轨发射（A 单文件 HTML / B React+Vite+Tailwind+shadcn 工程）→ G0–G3 质量门禁 → 回炉闭环。图标即其意象：方形螺旋迷宫之上，三片金色羽翼破阵而出（`assets/draw_icon.py` 可重绘）。
 
 ## 架构（文字版五层）
 
 ```
-[输入层]  文字 PRD（文件路径或粘贴）
-   │  S0 结构化（主会话）            → designspec.json
+[输入层]  一句想法 ──/prd 引导式创建──▶ 规范 PRD，或直接给文字 PRD（文件路径或粘贴）
+   │  S0 结构化（主会话；/prd 产物已含 designspec.json 时跳过）   → designspec.json
 [IR 层]   DesignSpec ── templates/designspec.schema.json
    │  S1+S2 规划（planner 代理）      → ir/prototypeir.json 骨架
    │  S3 逐页生成（pagegen × N 并行）→ ir/pages/<pageId>.json + 合并校验
@@ -21,7 +21,7 @@
           └─ 回炉闭环：错误原文回注重生成（单页修复 2–3 轮，总回炉 ≤3 轮）
 ```
 
-方法论真源：`skills/proto-gen/SKILL.md`（S0–S6 编排剧本）及其 `references/`（ir-spec / gates-spec / emission-spec）。
+方法论真源：`skills/prd-wizard/SKILL.md`（/prd 引导剧本）与 `skills/proto-gen/SKILL.md`（S0–S6 编排剧本）及其 `references/`（ir-spec / gates-spec / emission-spec）。
 
 ## 安装与重载（缓存拷贝制，重要）
 
@@ -35,6 +35,23 @@
 技能与代理内部统一按「插件根解析规则」定位 `<ROOT>`：取第一个存在者——①安装缓存 `...cache\local-plugins\daedalus\<version>\`（version 取目录实际值）②源目录 `C:\Users\mojun\plugins\daedalus\`。
 
 ## 用法
+
+### /prd — 从一句想法引导创建 PRD
+
+```
+/prd <初始想法, e.g. 我想要一个团队待办事项管理工具>    # 空参则询问你想做什么
+```
+
+四轮主题分组问答（目标用户 → 范围页面 → 交互数据 → 风格边界，已说清的轮自动跳过，总轮数 ≤6），每轮答案即时落进渐进草稿 `proto-out/prd-draft.md`；**定稿前必须经你确认**。确认后产出：
+
+```
+proto-out/
+├── prd/<name>.prd.md        # PRD 终稿（规范节骨架）
+├── prd-draft.md             # 渐进草稿留档
+└── designspec.json          # DesignSpec（validate 通过，可直接进流水线）
+```
+
+未拍板的分歧会如实写进 designspec 的 `openQuestions`，不替你做决定。定稿后询问是否立即 `/proto` 生成原型。
 
 ### /proto — 从 PRD 生成原型
 
@@ -65,6 +82,7 @@ proto-out/
 
 | 组件 | 角色 |
 |---|---|
+| skill `prd-wizard` | /prd 引导剧本：一句想法 → 规范 PRD + DesignSpec |
 | skill `proto-gen` | S0–S6 主编排剧本（含 references 三份规范） |
 | skill `proto-iterate` | 局部迭代剧本 |
 | skill `env-setup` | 环境医生（node/npm/playwright） |
@@ -90,9 +108,9 @@ proto-out/
 - **Node ≥ 20**、npm 可用（B 轨安装与 env_doctor --fix 需要）
 - **playwright**：仅 G 门禁需要。解析顺序 `import('playwright')` → `~/.zcode/cli/plugins/data/daedalus@local-plugins/node_modules/playwright` → 指引安装（exit 2）。装在插件数据目录是为了不污染用户工程且多项目共享 chromium。不跑门禁时缺失无碍。
 
-## v0.1 边界与路线
+## v0.2 边界与路线
 
-- 现版**仅文字通道**：输入只接受文字 PRD；图片 / Figma / 视频输入不支持。
+- 现版**仅文字通道**：输入只接受文字 PRD（含 /prd 引导创建）；图片 / Figma / 视频输入不支持。
 - G2 视觉评审是打分 + 回注重生成，**不做自动视觉修复**（不调样式参数重发）。
 - 生成物是原型不是生产代码；B 轨工程不承诺上线质量。
 - 路线：v0.x 计划引入图片/Figma/视频输入通道、S6 视觉自修复闭环、rich 复杂度页的双轨策略细化。

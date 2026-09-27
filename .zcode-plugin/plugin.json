@@ -2,11 +2,11 @@
   "name": "daedalus",
   "displayName": "代达罗斯",
   "displayName_i18n": { "en": "Daedalus", "zh-CN": "代达罗斯" },
-  "version": "0.1.0",
-  "description": "设计方案→可交互Web原型生成流水线：双级IR（DesignSpec/PrototypeIR）、双轨发射（单文件HTML + React+Vite+Tailwind+shadcn工程）、G0-G3质量门禁与回炉闭环。v0.1 覆盖文字PRD通道。",
+  "version": "0.2.0",
+  "description": "设计方案→可交互Web原型生成流水线：/prd引导式创建规范PRD、双级IR（DesignSpec/PrototypeIR）、双轨发射（单文件HTML + React+Vite+Tailwind+shadcn工程）、G0-G3质量门禁与回炉闭环。",
   "description_i18n": {
-    "en": "Design-spec to interactive web prototype pipeline: two-level IR, dual-track emission (single-file HTML + React/Vite/Tailwind/shadcn), G0-G3 quality gates with rework loop. v0.1 covers the text-PRD channel.",
-    "zh-CN": "设计方案→可交互Web原型生成流水线：双级IR、双轨发射（单文件HTML + React+Vite+Tailwind+shadcn工程）、G0-G3质量门禁与回炉闭环。v0.1 覆盖文字PRD通道。"
+    "en": "Idea to interactive web prototype pipeline: guided PRD creation (/prd), two-level IR (DesignSpec/PrototypeIR), dual-track emission (single-file HTML + React/Vite/Tailwind/shadcn), G0-G3 quality gates with rework loop.",
+    "zh-CN": "设计方案→可交互Web原型生成流水线：/prd引导式创建规范PRD、双级IR、双轨发射（单文件HTML + React+Vite+Tailwind+shadcn工程）、G0-G3质量门禁与回炉闭环。"
   },
   "author": { "name": "mojun" },
   "license": "MIT",

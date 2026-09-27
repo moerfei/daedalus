@@ -38,6 +38,7 @@ proto-out/
 
 ## 2. S0 — PRD → DesignSpec（主会话）
 
+0. **衔接检查**：若 `<cwd>/proto-out/designspec.json` 已存在且 `validate_ir.mjs --kind designspec` 通过（通常是 `/prd` 引导式创建的产物），**跳过本阶段直接进 S1**，不要重做 S0；用户还没有 PRD 时，提示可先跑 `/prd` 引导创建。
 1. 读 PRD：`$ARGUMENTS` 给了路径则读文件；给的是正文则直接用；都没给就先问用户要。
 2. 产出 `designspec.json`：把 PRD 结构化为页面清单 / 交互清单 / 数据实体 / 风格提示，字段必须符合 `<ROOT>/templates/designspec.schema.json`（meta.name、summary≥10 字、pages[] 每页 id `^p-[a-z0-9-]+$`+title+intent、interactions[]、dataEntities[]、styleHints、openQuestions——PRD 有歧义就写进 openQuestions，不要替用户拍板）。
 3. 校验（失败则按 errors 自修重试，**≤2 轮**）：
@@ -105,7 +106,7 @@ scaffold 产出的是页 stub（`src/routes/<pageId>/index.tsx` 带 `// PAGEGEN-
 ## 7. S6 — 门禁与回炉
 
 1. **环境**：先走 `env-setup` 技能确认 playwright 就绪（gates 对 playwright 缺失会 exit 2）。
-2. **A 轨门禁**（内置静态服务）：
+2. **A 轨门禁**（内置静态服务；`--serve` 指产物目录，gates 自动定位其中唯一的 .html）：
 
 ```bash
 node <ROOT>/scripts/gates.mjs --ir ir/prototypeir.json --serve a-track --out gates-report
@@ -142,8 +143,8 @@ node <ROOT>/scripts/preview.mjs a-track/prototype.html --open
 
 回炉的本质是**错误原文回注**：把 validate/gates 的 errors 与失败 check 原样贴给责任代理，让它对着证据修，而不是泛泛地"再试一次"。
 
-## 10. v0.1 边界
+## 10. v0.2 边界
 
-- **仅文字通道**：输入只接受文字 PRD；图片 / Figma / 视频输入不在本版。
+- **仅文字通道**：输入只接受文字 PRD（含 `/prd` 引导式创建的产物）；图片 / Figma / 视频输入不在本版。
 - S6 视觉评审是打分 + 回注，**不做视觉自修复**（不自动调样式参数重发）。
 - 生成物是原型，不是生产代码；B 轨工程不承诺上线质量。

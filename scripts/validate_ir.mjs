@@ -83,6 +83,21 @@ function crossPrototype(ir, errs) {
     if (!pageIds.has(e.from)) errs.push({ path: `flowGraph.edges[${i}].from`, rule: 'edge-endpoint', message: `from "${e.from}" 不是已定义页面` });
     if (!pageIds.has(e.to)) errs.push({ path: `flowGraph.edges[${i}].to`, rule: 'edge-endpoint', message: `to "${e.to}" 不是已定义页面` });
   });
+  // 规则 7：layoutTree 显式 id 跨页唯一（A 轨多 section 共 DOM，重复 id 会让选择器歧义、
+  // 门禁的 byId 索引被覆盖 —— 导航按钮只在"物理所在页"声明，当前页不需要跳自己的按钮）
+  const idOwner = new Map();
+  pages.forEach((p, i) => {
+    if (!p) return;
+    walkTree(p.layoutTree, `pages[${i}].layoutTree`, (n, path) => {
+      if (n && n.id) {
+        if (idOwner.has(n.id) && idOwner.get(n.id).page !== p.id) {
+          errs.push({ path, rule: 'id-cross-page-unique', message: `元素 id "${n.id}" 跨页重复（首见 ${idOwner.get(n.id).page}，本页 ${p.id}）——导航/共享控件只声明在物理所在页，A 轨单 DOM 下重复 id 会导致选择器歧义` });
+        } else if (!idOwner.has(n.id)) {
+          idOwner.set(n.id, { page: p.id });
+        }
+      }
+    });
+  });
   pages.forEach((p, pi) => {
     if (!p || !p.layoutTree) return;
     // 规则 3：本页可达 id 集（含自动 id：tab-<tab名>、<listId>-row-<n>、<dialogId>-close）

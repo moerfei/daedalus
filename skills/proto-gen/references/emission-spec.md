@@ -30,6 +30,7 @@ v0.1 所有页默认 `interactiveComplexity=basic`（两轨都发）；rich 判�
 | 交互挂载 | 统一挂 `data-proto-chain='[{...},{...}]'`（JSON 数组，按 IR interactions 顺序）；元素 id = trigger 的 @ 后缀 |
 | 状态条件显隐 | 元素可带 `data-proto-if="key=value"`（runtime 初始化与状态变更时求值） |
 | set-state | `key=value` 扁平 kv，存 sessionStorage 的 `proto-state` JSON |
+| **元素 id 跨页唯一** | A 轨是多 section 共存的单 DOM，**任何元素 id 不得跨页重复**（validate 规则 `id-cross-page-unique` 强制）。导航/共享控件只声明在**物理所在页**：当前页不需要"跳转到自己"的按钮——如 p-today 页的 NavBar 只放 `nav-board`（去看板），p-board 页的 NavBar 只放 `nav-today`（回今日）。跨页重复会让门禁的 byId 索引被后声明页覆盖，导致交互断言在错误页执行 |
 
 **B 轨对应义务**：pagegen 写 `src/routes/<pageId>/index.tsx` 时必须保留同一套锚点——元素 id、`tab-<名>` 按钮（含 `data-proto-tab`）、面板 `data-proto-panel` 与激活类 `.pk-active`、modal 节点 id 与 `<id>-close`、list 行 id、submit 按钮 `type="submit"`、toast 容器 `[data-proto-toast]`。交互用 React 状态真实实现（不经 proto-runtime），但**对外 DOM 契约不变**——G3 用同一套选择器断言两轨。
 

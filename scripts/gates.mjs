@@ -359,6 +359,13 @@ async function main() {
       entryFile = path.basename(servePath)
     } else {
       rootDir = servePath
+      // 目录模式：优先 index.html；无则回退目录下唯一的 .html（如 A 轨 prototype.html）
+      if (fs.existsSync(path.join(rootDir, 'index.html'))) {
+        entryFile = 'index.html'
+      } else {
+        const htmls = fs.readdirSync(rootDir).filter((f) => f.endsWith('.html'))
+        if (htmls.length === 1) entryFile = htmls[0]
+      }
     }
     const srv = createStaticServer(rootDir, entryFile, args.port || 8787)
     server = srv.server
